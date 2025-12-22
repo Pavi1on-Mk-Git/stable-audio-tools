@@ -76,16 +76,6 @@ def main():
     )
     save_model_config_callback = ModelConfigEmbedderCallback(model_config)
 
-    val_args = {}
-
-    if args.val_every > 0:
-        val_args.update(
-            {
-                "check_val_every_n_epoch": None,
-                "val_check_interval": args.val_every,
-            }
-        )
-
     trainer = pl.Trainer(
         devices=args.num_gpus,
         accelerator="gpu",
@@ -99,7 +89,6 @@ def main():
         gradient_clip_val=args.gradient_clip_val,
         reload_dataloaders_every_n_epochs=0,
         num_sanity_val_steps=0,  # If you need to debug validation, change this line
-        **val_args,
     )
 
     trainer.fit(training_wrapper, train_dl, val_dl)
