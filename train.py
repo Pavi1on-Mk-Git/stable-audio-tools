@@ -72,7 +72,11 @@ def main():
     checkpoint_dir = args.save_dir if args.save_dir else None
 
     ckpt_callback = pl.callbacks.ModelCheckpoint(
-        every_n_train_steps=args.checkpoint_every, dirpath=checkpoint_dir, save_top_k=-1
+        every_n_train_steps=args.checkpoint_every,
+        dirpath=checkpoint_dir,
+        save_top_k=-1,
+        save_weights_only=True,
+        filename="{step}",
     )
     save_model_config_callback = ModelConfigEmbedderCallback(model_config)
 
