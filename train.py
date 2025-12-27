@@ -42,6 +42,7 @@ def main():
         sample_rate=model_config["sample_rate"],
         sample_size=model_config["sample_size"],
         audio_channels=model_config.get("audio_channels", 2),
+        random_subset_percentage=args.random_subset_percentage,
     )
 
     val_dl = None
