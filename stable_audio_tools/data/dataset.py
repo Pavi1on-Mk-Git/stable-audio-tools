@@ -895,6 +895,7 @@ def create_dataloader_from_config(
     num_workers=4,
     shuffle=True,
     random_subset_percentage=1.0,
+    return_dataset_size=False,
 ):
     dataset_type = dataset_config.get("dataset_type", None)
 
@@ -951,7 +952,8 @@ def create_dataloader_from_config(
             random_subset_percentage=random_subset_percentage,
         )
 
-        return torch.utils.data.DataLoader(
+        
+        dataloader = torch.utils.data.DataLoader(
             train_set,
             batch_size,
             shuffle=shuffle,
@@ -961,6 +963,7 @@ def create_dataloader_from_config(
             drop_last=dataset_config.get("drop_last", True),
             collate_fn=collation_fn,
         )
+        return dataloader, len(train_set) if return_dataset_size else dataloader
 
     elif dataset_type == "pre_encoded":
         pre_encoded_dir_configs = dataset_config.get("datasets", None)
@@ -1015,7 +1018,7 @@ def create_dataloader_from_config(
             latent_extension=latent_extension,
         )
 
-        return torch.utils.data.DataLoader(
+        dataloader = torch.utils.data.DataLoader(
             train_set,
             batch_size,
             shuffle=shuffle,
@@ -1025,6 +1028,7 @@ def create_dataloader_from_config(
             drop_last=dataset_config.get("drop_last", True),
             collate_fn=collation_fn,
         )
+        return dataloader, len(train_set) if return_dataset_size else dataloader
 
     elif dataset_type in ["s3", "wds"]:  # Support "s3" type for backwards compatibility
         wds_configs = []
@@ -1061,7 +1065,7 @@ def create_dataloader_from_config(
                     )
                 )
 
-        return WebDatasetDataLoader(
+        dataloader = WebDatasetDataLoader(
             wds_configs,
             sample_rate=sample_rate,
             sample_size=sample_size,
@@ -1081,3 +1085,5 @@ def create_dataloader_from_config(
             latent_crop_length=dataset_config.get("latent_crop_length", None),
             resampled_shards=dataset_config.get("resampled_shards", True),
         ).data_loader
+
+        return dataloader, None if return_dataset_size else dataloader
