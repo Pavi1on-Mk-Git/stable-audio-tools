@@ -571,6 +571,8 @@ class DiffusionCondTrainingWrapper(pl.LightningModule):
 
         log_metric(self.logger, "val/avg_loss", val_loss, step=self.global_step)
 
+        print(f"val/avg_loss: {val_loss}")
+
         # Reset validation losses
         for validation_timestep in self.validation_timesteps:
             self.validation_step_outputs[f"val/loss_{validation_timestep:.1f}"] = []

@@ -95,6 +95,9 @@ def main():
         num_sanity_val_steps=0,  # If you need to debug validation, change this line
     )
 
+    if val_dl is not None:
+        trainer.validate(training_wrapper, val_dl)
+
     trainer.fit(training_wrapper, train_dl, val_dl)
 
 
